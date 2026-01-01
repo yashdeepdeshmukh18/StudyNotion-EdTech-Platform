@@ -4,6 +4,7 @@ const otpGenerator = require('otp-generator');
 const bcrypt = require('bcrypt');
 const Profile = require('../models/Profile');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 
 // sendOTP
@@ -182,12 +183,14 @@ exports.login = async (req, res) => {
             })
         }
         // generat JWT, afer password match
-        if(await bcrypt.comapre(password, user.password)){
+        if(await bcrypt.compare(password, user.password)){
             const payload = {
-
+                email: user.email,
+                id: user._id,
+                accountType: user.accountType,
             }
 
-            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
         }
         // create cookie and send response
 
@@ -199,5 +202,20 @@ exports.login = async (req, res) => {
 };
 
 
-// cahngePassword
+// changePassword
+
+exports.changePassword = async (req, res) => {
+    // get data from req body
+
+    // get old password, new password, confirm new password
+
+    // validation
+
+    // update password in DB
+
+    // send mail -> password updated
+
+    // return response
+
+}
 
