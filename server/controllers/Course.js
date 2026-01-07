@@ -20,10 +20,11 @@ exports.createCourse = async (req, res) => {
             });
         }
 
-        // check for instructor -> already verified in auth middleware but this is bring details of instructor on ui
+        // check for instructor -> already verified in auth middleware but this is to bring details of instructor on ui
         const userId = req.user.id;
         const instructorDetails = await User.findById(userId);
         console.log("Instruction Details: ", instructorDetails);
+        // TODO: verify that userId and instructor._id is same or not
 
         if(!instructorDetails){
             return res.status(404).json({
@@ -87,5 +88,37 @@ exports.createCourse = async (req, res) => {
 }
 
 
+
+// get all courses handler function
+
+exports.showAllCourses = async (req, res) => {
+    try{    
+            // TODO: change the below stmt incrementally
+
+            const allCourses = await Course.find({}).populate("instructor").exec();
+
+            // {courseName:true,
+            //                                             price:true,
+            //                                             thumbnail:true,
+            //                                             instructor:true,
+            //                                             ratingAndReviews:true,
+            //                                             studentsEnrolled:true,
+            // }
+            
+            return res.status(200).json({
+                success: true,
+                message: "All courses fetched successfully",
+                data:allCourses,
+            })
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Unable to fetch courses",
+            error: error.message,
+        })
+    }
+}
 
 
