@@ -92,6 +92,7 @@ exports.deleteSection = async (req, res) => {
         // delete section
         await Section.findByIdAndDelete(sectionId);
 
+        // Todo[testing] : is there need to remove the sectionId from the corresponding course's sections array?
         return res.status(200).json({
             success: true,
             message: "Section deleted successfully"
