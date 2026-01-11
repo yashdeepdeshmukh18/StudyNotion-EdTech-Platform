@@ -5,7 +5,8 @@ const bcrypt = require('bcrypt');
 const Profile = require('../models/Profile');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
+const mailSender = require("../utils/mailSender");
+const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 
 // sendOTP
 exports.sendOTP = async (req, res) => {
@@ -205,17 +206,79 @@ exports.login = async (req, res) => {
 // changePassword
 
 exports.changePassword = async (req, res) => {
-    // get data from req body
+    try{
+        // get data from req body
+        const userDetails = await User.findById(req.user.id);
 
-    // get old password, new password, confirm new password
+        // get old password, new password, confirm new password
+        const {oldPassword, newPassword, confirmPassword} = req.body;
 
-    // validation
+        // validation
+        // validate old password match
+        const isPassword = await bcrypt.compare(oldPassword, userDetails.password);
 
-    // update password in DB
+        if(!isPassword){
+            return res.status(401).json({ 
+                success: false,
+                message: "The password is incorrect" 
+            });
+        }
 
-    // send mail -> password updated
+        // Match new password and confirm new password
+        if (newPassword !== confirmNewPassword) {
+            // If new password and confirm new password do not match, return a 400 (Bad Request) error
+            return res.status(400).json({
+                success: false,
+                message: "The password and confirm password does not match",
+            });
+        }
 
-    // return response
+        // update password in DB
+        const encryptedPassword = await bcrypt.hash(newPassword, 10);
+        const updatedUserDetails = await User.findByIdAndUpdate(
+            req.user.id,
+            { password: encryptedPassword },
+            { new: true }
+        );
+        
+        // send mail -> password updated
+        try {
+			const emailResponse = await mailSender(
+				updatedUserDetails.email,
+				passwordUpdated(
+					updatedUserDetails.email,
+					`Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
+				)
+			);
+			console.log("Email sent successfully:", emailResponse.response);
+		} 
+        catch (error) {
+			// If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
+			console.error("Error occurred while sending email:", error);
+			return res.status(500).json({
+				success: false,
+				message: "Error occurred while sending email",
+				error: error.message,
+			});
+		}
 
+
+        // return response
+        return res.status(200).json({
+            success: true,
+            message: "Password updated successfully" 
+        });
+
+
+    }
+    catch(error){
+        // If there's an error updating the password, log the error and return a 500 (Internal Server Error) error
+		console.error("Error occurred while updating password:", error);
+		return res.status(500).json({
+			success: false,
+			message: "Error occurred while updating password",
+			error: error.message,
+		});
+    }
 }
 
