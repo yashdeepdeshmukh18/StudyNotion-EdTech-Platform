@@ -90,11 +90,12 @@ exports.categoryPageDetails = async (req, res) => {
 		const selectedCourses = selectedCategory.courses;
 
 		// Get courses for other categories
-		const categoriesExceptSelected = await Category.find({
+		const differentCategories = await Category.find({
 			_id: { $ne: categoryId },
-		}).populate("courses");
+		}).populate("courses").exec();
+
 		let differentCourses = [];
-		for (const category of categoriesExceptSelected) {
+		for (const category of differentCategories) {
 			differentCourses.push(...category.courses);
 		}
 
@@ -104,13 +105,14 @@ exports.categoryPageDetails = async (req, res) => {
 		const mostSellingCourses = allCourses
 			.sort((a, b) => b.sold - a.sold)
 			.slice(0, 10);
+		
 
 		res.status(200).json({
 			selectedCourses: selectedCourses,
 			differentCourses: differentCourses,
 			mostSellingCourses: mostSellingCourses,
 		});
-	} catch (error) {
+	}catch (error) {
 		return res.status(500).json({
 			success: false,
 			message: "Internal server error",
