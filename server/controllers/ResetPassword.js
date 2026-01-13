@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const mailSender = require('../utils/mailSender');
-const berypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 
 // resestPasswordToken
