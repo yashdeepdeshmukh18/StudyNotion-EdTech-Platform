@@ -15,7 +15,7 @@ exports.createCategory = async (req, res) => {
         }
 
         // create entry in db
-        const CategorysDetails = await Tag.create({
+        const CategorysDetails = await Category.create({
             name:name,
             description:description,
         });
@@ -43,12 +43,12 @@ exports.createCategory = async (req, res) => {
 
 exports.showAllCategories = async (req, res) => {
     try{
-        const allCategorys = await Tag.find({}, {name:true, description:true});
+        const allCategorys = await Category.find({}, {name:true, description:true});
 
         res.status(200).json({
             success: true,
             message: "All category returned succesfully",
-            allTags,
+            data:allCategorys,
         })
     }
     catch(error){

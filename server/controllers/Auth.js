@@ -81,7 +81,7 @@ exports.signUp = async (req, res) => {
         const {firstName, lastName, email, password, confirmPassword, accountType, contactNumber,otp} = req.body;
 
         // validate otp
-        if(!firstName || !lastName || !email || !paassword || !confirmPassword || !otp){
+        if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
             return res.status(403).json({
                 success:false,
                 message:"All fields are required"
@@ -118,7 +118,7 @@ exports.signUp = async (req, res) => {
                 message: "OTP not found"
             })
         }
-        else if(otp !== recentOTP.otp){
+        else if(otp !== recentOTP[0].otp){
             // Invalid otp
             return res.status(400).json({
                 success: false,
@@ -154,7 +154,7 @@ exports.signUp = async (req, res) => {
     catch(error){
         console.log(error);
         return res.status(500).json({
-            success: fale,
+            success: false,
             message: "User cannot be registered. Please try again later"
         })
     }
@@ -192,13 +192,36 @@ exports.login = async (req, res) => {
             }
 
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' });
+            // Save token to user document in database
+            user.token = token;
+            user.password = undefined;
+            // Set cookie for token and return success response
+            const options = {
+                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+                httpOnly: true,
+            };
+            res.cookie("token", token, options).status(200).json({
+                success: true,
+                token,
+                user,
+                message: `User Login Success`,
+            });
         }
-        // create cookie and send response
+        else {
+			return res.status(401).json({
+				success: false,
+				message: `Password is incorrect`,
+			});
+		}
 
     }
     catch(error){
-
-
+       console.error(error);
+		// Return 500 Internal Server Error status code with error message
+		return res.status(500).json({
+			success: false,
+			message: `Login Failure Please Try Again`,
+		});
     }
 };
 
@@ -211,7 +234,7 @@ exports.changePassword = async (req, res) => {
         const userDetails = await User.findById(req.user.id);
 
         // get old password, new password, confirm new password
-        const {oldPassword, newPassword, confirmPassword} = req.body;
+        const {oldPassword, newPassword, confirmNewPassword} = req.body;
 
         // validation
         // validate old password match

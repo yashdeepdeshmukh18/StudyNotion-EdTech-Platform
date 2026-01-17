@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const mailSender = require('../utils/mailSender');
 const bcrypt = require('bcrypt');
+const crypto = require("crypto");
 
 
 // resestPasswordToken
@@ -11,7 +12,7 @@ exports.resetPasswordToken = async (req, res) => {
         // check user present with email, email validation
         const user = await User.findOne({email: email});
         if(!user){
-            return res.status(404).json({
+            return res.status(404).json({   
                 success: false,
                 message: 'User not found with this email'
             });
@@ -21,14 +22,16 @@ exports.resetPasswordToken = async (req, res) => {
         const token =  crypto.randomUUID();
 
         // update user by adding token and expiry time
-        const updatedDetails = await User.findByIdAndUpdate(
-                                    {email: email},
+        const updatedDetails = await User.findOneAndUpdate(
+                                    { email: email },
                                     {
                                         token: token,
                                         resetPasswordExpires: Date.now() + 5*60*1000 // 5 minutes
                                     },
                                     {new: true}
         );
+        
+        console.log("DETAILS", updatedDetails);
 
         // create url
         const url = `http://localhost:3000/update-password/${token}`
@@ -36,18 +39,19 @@ exports.resetPasswordToken = async (req, res) => {
         // send mail contianing url
         await mailSender(email, 
                         "Password Reset Link",
-                        `Password reset Link: ${url}`
+                        `Your Link for email verification is ${url}. Please click this url to reset your password.`
         );
 
         // return response
-        return res.json({
+        return res.status(200).json({
             success:true,
             message: 'Email sent successfully, please check email and change your pwd'
         });
     }
     catch(error){
         console.log(error);
-        return res.status().json({
+        return res.status(500).json({
+            error: error.message,
             success: false,
             message:'something went wrong while sending reset password email'
         });
@@ -91,7 +95,7 @@ exports.resetPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // update pwd in db
-        await User.findByIdAndUpdate(
+        await User.findOneAndUpdate(
             {token: token},
             {password: hashedPassword},
             {new: true}

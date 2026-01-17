@@ -7,7 +7,7 @@ const {uploadImageToCloudinary} = require('../utils/imageUploader');
 exports.createCourse = async (req, res) => {
     try{
         // fetch data
-        const {courseName, courseDescription, whatYouWillLearn, price, tag, category, status, instructions} = req.body;
+        let {courseName, courseDescription, whatYouWillLearn, price, tag, category, status, instructions} = req.body;
 
         // get thumbnail
         const thumbnail = req.files.thumbnailImage;
@@ -61,7 +61,7 @@ exports.createCourse = async (req, res) => {
             price,
             tag: tag,
             Category: CategoryDetails._id,
-            thumbnail: thumbnailImage.secure_url,
+            thumbnail: thumbnailImageUploadResponse.secure_url,
             status: status,
 			instructions: instructions,
         })
@@ -158,7 +158,7 @@ exports.getCourseDetails = async (req, res) => {
                 }
             )
             .populate("category")
-            .populate("ratingAndreviews")
+            // .populate("ratingAndreviews")
             .populate({
                 path:"courseContent",
                 populate:{
