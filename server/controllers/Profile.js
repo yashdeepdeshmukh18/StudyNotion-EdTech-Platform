@@ -63,7 +63,7 @@ exports.deleteAccount = async (req, res) => {
         }
 
         // delete profile
-        await Profile.findByIdAndDelete({__id: userDetails.additionalDetails}); 
+        await Profile.findByIdAndDelete({_id: userDetails.additionalDetails}); 
         // Todo: unenroll user from all courses
 
         // delete user

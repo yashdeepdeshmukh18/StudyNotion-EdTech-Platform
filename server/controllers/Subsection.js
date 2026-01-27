@@ -32,10 +32,10 @@ exports.createSubsection = async (req, res) => {
 
         // update section with subsection objectID
         const updatedSection = await Section.findByIdAndUpdate(
-            sectionId,
-            { $push: { subsection: SubsectionDetails._id } },
+            { _id: sectionId },
+            { $push: { subSection: SubsectionDetails._id } },
             { new: true }
-        );
+        ).populate("subSection");
 
         // HW :log updated secion here, after adding populate query
 
@@ -89,7 +89,7 @@ exports.createSubsection = async (req, res) => {
   
       return res.json({
         success: true,
-        message: "Section updated successfully",
+        message: "Sub Section updated successfully",
       })
     } catch (error) {
       console.error(error)
