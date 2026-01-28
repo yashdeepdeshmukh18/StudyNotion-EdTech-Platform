@@ -78,7 +78,7 @@ exports.sendOTP = async (req, res) => {
 exports.signUp = async (req, res) => {
     try{
         // data fetch from req body
-        const {firstName, lastName, email, password, confirmPassword, accountType, contactNumber,otp} = req.body;
+        const {firstName, lastName, email, password, confirmPassword, accountType, contactNumber, otp} = req.body;
 
         // validate otp
         if(!firstName || !lastName || !email || !password || !confirmPassword || !otp){
@@ -140,7 +140,7 @@ exports.signUp = async (req, res) => {
 
         const user = await User.create({
             firstName, lastName, email, contactNumber, password:hashedPassword, accountType,
-            additionalDetails:profileDetails._id, image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`,
+            additionalDetails:profileDetails._id, image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName}-${lastName}`,
         })
 
         // return res 
