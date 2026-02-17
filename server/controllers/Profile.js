@@ -7,6 +7,7 @@ exports.updateProfile = async (req, res) => {
         // data fetch
         const {dateOfBirth="", about="", contactNumber, gender} = req.body;
 
+
         // get User ID
         const id = req.user.id;
 
@@ -29,7 +30,7 @@ exports.updateProfile = async (req, res) => {
         profileDetails.contactNumber = contactNumber;
         profileDetails.gender = gender;
         await profileDetails.save();
-        
+
         return res.status(200).json({
             success: true,
             message: "Profile updated successfully",
@@ -146,6 +147,7 @@ exports.getEnrolledCourses = async (req, res) => {
       })
         .populate("courses")
         .exec()
+
       if (!userDetails) {
         return res.status(400).json({
           success: false,

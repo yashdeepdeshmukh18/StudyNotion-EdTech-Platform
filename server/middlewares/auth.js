@@ -6,13 +6,16 @@ const User = require("../models/User");
 exports.auth = async (req, res, next) => {
     try{
         // Extracting JWT from request cookies, body or header
-		const token =
-			req.cookies.token ||
-			req.body.token ||
-			req.header("Authorization").replace("Bearer ", "");
+    //    console.log("before extract");
+        const token =
+            req.cookies?.token ||
+            req.body?.token ||
+            req.header("Authorization").replace("Bearer ", "");
 
+        
         // If JWT is missing, return response
 		if (!token) {
+            console.log("Token missing")
 			return res.status(401).json({
                 success: false, 
                 message: `Token Missing`
@@ -27,6 +30,7 @@ exports.auth = async (req, res, next) => {
         }
         catch(err){
             // verification failed
+            console.log("Error while verifying jwt", err.message);
             return res.status(401).json({
                 success: false,
                 message: `Token is invalid`
@@ -37,6 +41,7 @@ exports.auth = async (req, res, next) => {
 
     }
     catch(error){
+        console.log("verrifying error", error.message);
         return res.status(401).json({
             success: false,
             message: `Something went wrong while verifying the token`
