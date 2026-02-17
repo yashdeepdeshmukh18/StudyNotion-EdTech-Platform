@@ -7,13 +7,33 @@ const {uploadImageToCloudinary} = require('../utils/imageUploader');
 exports.createCourse = async (req, res) => {
     try{
         // fetch data
-        let {courseName, courseDescription, whatYouWillLearn, price, tag, category, status, instructions} = req.body;
+        let {courseName,
+            courseDescription,
+            whatYouWillLearn,
+            price, 
+            tag: _tag, 
+            category, 
+            status, 
+            instructions: _instructions,
+        } = req.body;
+
+        const tag = JSON.parse(_tag)
+        const instructions = JSON.parse(_instructions)
 
         // get thumbnail
-        const thumbnail = req.files.thumbnailImage;
+        // const thumbnail = req.files.thumbnailImage;
 
         // validation
-        if(!courseName || !courseDescription || !whatYouWillLearn || !price || !tag || !category || !thumbnail){
+        if(!courseName || 
+            !courseDescription || 
+            !whatYouWillLearn || 
+            !price || 
+            !tag.length || 
+            !category ||
+            !instructions.length
+            // !thumbnail
+
+        ){
             return res.status(400).json({
                 success: false,
                 message: "All fields are required to create a course",
@@ -49,8 +69,8 @@ exports.createCourse = async (req, res) => {
         }
 
         // upload Image to cloudinary
-        const thumbnailImageUploadResponse = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME);
-        console.log(thumbnailImageUploadResponse);
+        // const thumbnailImageUploadResponse = await uploadImageToCloudinary(thumbnail, process.env.FOLDER_NAME);
+        // console.log(thumbnailImageUploadResponse);
 
         // create entry in db for new course
         const newCourse = await Course.create({
@@ -59,9 +79,9 @@ exports.createCourse = async (req, res) => {
             instructor: instructorDetails._id,
             whatYouWillLearn:whatYouWillLearn,
             price,
-            tag: tag,
+            tag,
             Category: CategoryDetails._id,
-            thumbnail: thumbnailImageUploadResponse.secure_url,
+            // thumbnail: thumbnailImageUploadResponse.secure_url,
             status: status,
 			instructions: instructions,
         })
