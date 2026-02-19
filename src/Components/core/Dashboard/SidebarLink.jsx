@@ -18,8 +18,8 @@ const SidebarLink = ({link, iconName}) => {
         className = {`relative px-8 py-2 text-sm text-white font-medium ${matchRoute(link.path) ? "bg-yellow-800" : "bg-opacity-0"}`}
     >
 
-        <span className={`absolute left-0 top-0 h-full w-[0.2rem] bg-yellow-50
-            ${matchRoute(link.path) ? "opacity-100" : "opacity=0"}`}>
+        <span className={`absolute left-0 top-0 h-full w-[0.2rem] 
+            ${matchRoute(link.path) ? "opacity-100 bg-yellow-50" : "opacity=0"}`}>
 
         </span>
 
