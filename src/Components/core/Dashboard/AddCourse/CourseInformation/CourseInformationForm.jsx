@@ -48,7 +48,7 @@ const CourseInformationForm = () => {
       setValue("courseBenefits", course.whatWillYouLearn);
       setValue("courseCategory", course.category);
       setValue("courseRequirements", course.instructions);
-      // setValue("courseImage", course.thumbnail);
+      setValue("courseImage", course.thumbnail);
 
     }
 
@@ -116,10 +116,10 @@ const CourseInformationForm = () => {
             JSON.stringify(data.courseRequirements)
           )
         }
-        // if (currentValues.courseImage !== course.thumbnail) {
-        //   formData.append("thumbnailImage", data.courseImage)
-        // }
-        // console.log("Edit Form data: ", formData)
+        if (currentValues.courseImage !== course.thumbnail) {
+          formData.append("thumbnailImage", data.courseImage)
+        }
+        console.log("Edit Form data: ", formData)
         setLoading(true)
         const result = await editCourseDetails(formData, token)
         setLoading(false)
@@ -142,7 +142,7 @@ const CourseInformationForm = () => {
     formData.append("category", data.courseCategory)
     formData.append("status", COURSE_STATUS.DRAFT)
     formData.append("instructions", JSON.stringify(data.courseRequirements))
-    // formData.append("thumbnailImage", data.courseImage)
+    formData.append("thumbnailImage", data.courseImage)
     setLoading(true)
     const result = await addCourseDetails(formData, token)
     if (result) {
@@ -257,14 +257,14 @@ const CourseInformationForm = () => {
       />    
 
       {/* Course Thumbnail Image */}
-      {/* <Upload
+      <Upload
         name="courseImage"
         label="Course Thumbnail"
         register={register}
         setValue={setValue}
         errors={errors}
         editData={editCourse ? course?.thumbnail : null}
-      /> */}
+      />
 
       {/* Benefits of the course */}
       <div className="flex flex-col space-y-2">
