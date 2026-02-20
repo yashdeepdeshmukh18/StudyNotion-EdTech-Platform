@@ -6,13 +6,13 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createSubsection = async (req, res) => {
     try{
         // data fetch
-        const {sectionId, title, timeDuration, description} = req.body;
+        const {sectionId, title, description} = req.body;
 
         // extract file/video
-        const video = req.files.videoFile;
+        const video = req.files.video;
 
         // data validation
-        if (!sectionId || !title || !timeDuration || !description || !video) {
+        if (!sectionId || !title || !description || !video) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -25,7 +25,7 @@ exports.createSubsection = async (req, res) => {
         // create subsection
         const SubsectionDetails = await Subsection.create({
             title: title,
-            timeDuration: timeDuration,
+            timeDuration: `${uploadDetails.duration}`,
             description: description,
             videoUrl : uploadDetails.secure_url
         });  
@@ -85,10 +85,14 @@ exports.createSubsection = async (req, res) => {
         subSection.timeDuration = `${uploadDetails.duration}`
       }
   
-      await subSection.save()
+      await subSection.save();
+
+      const updatedSection = await Section.findById(sectionId).populate( "subSection" )
+
   
       return res.json({
         success: true,
+        data:updatedSection,
         message: "Sub Section updated successfully",
       })
     } catch (error) {
@@ -119,9 +123,13 @@ exports.createSubsection = async (req, res) => {
           .status(404)
           .json({ success: false, message: "SubSection not found" })
       }
+
+      // find updated section and return it
+      const updatedSection = await Section.findById(sectionId).populate( "subSection" )
   
       return res.json({
         success: true,
+        data:updatedSection,
         message: "SubSection deleted successfully",
       })
     } catch (error) {
