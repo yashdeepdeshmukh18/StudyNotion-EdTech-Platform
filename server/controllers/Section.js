@@ -1,5 +1,6 @@
 const Section = require('../models/Section');
 const Course = require('../models/Course');
+const Subsection = require('../models/Subsection');
 
 exports.createSection = async (req, res) => {
     try{
@@ -18,20 +19,25 @@ exports.createSection = async (req, res) => {
         const newSection = await Section.create({sectionName});
 
         // update course with section objectID
-        const updatedCourseDetails = await Course.findByIdAndUpdate(
+        const updatedCourse = await Course.findByIdAndUpdate(
             courseId,
             {
                 $push: { courseContent: newSection._id }
             },
             { new: true }
-        );
+        ).populate({
+            path: "courseContent",
+            populate: {
+                path: "subSection",
+            },
+        })
+        .exec()
 
-        // HW : use populate to fetch updated course details with sections and subsections
 
         return res.status(200).json({
             success: true,
+            updatedCourse,
             message: "Section created successfully",
-            updatedCourseDetails
         });
 
 
@@ -50,7 +56,7 @@ exports.createSection = async (req, res) => {
 exports.updateSection = async (req, res) => {
     try{
         // data fetch
-        const {sectionName, sectionId } = req.body;
+        const {sectionName, sectionId, courseId } = req.body;
 
         // data validation
         if (!sectionName || !sectionId) {
@@ -68,8 +74,18 @@ exports.updateSection = async (req, res) => {
             { new: true }
         );
 
+        const course = await Course.findById(courseId)
+        .populate({
+            path: "courseContent",
+            populate: {
+            path: "subSection",
+            },
+        })
+        .exec()
+
         return res.status(200).json({
             success: true,
+            data: course,
             message: "Section updated successfully"
         });
     }
@@ -85,27 +101,51 @@ exports.updateSection = async (req, res) => {
 
 
 exports.deleteSection = async (req, res) => {
-    try{
-        // data fetch - assuming sectionId is sent in params
-        const { sectionId } = req.body;
+  try {
+    const { sectionId, courseId } = req.body
 
-        // delete section
-        await Section.findByIdAndDelete(sectionId);
+    await Course.findByIdAndUpdate(courseId, {
+      $pull: {
+        courseContent: sectionId,
+      },
+    })
 
-        // Todo[testing] : is there need to remove the sectionId from the corresponding course's sections array?
-        return res.status(200).json({
-            success: true,
-            message: "Section deleted successfully"
-        });
-
+    const section = await Section.findById(sectionId)
+    console.log(sectionId, courseId)
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "Section not found",
+      })
     }
-    catch(error){
-        return res.status(500).json({
-            success: false,
-            message: "Unable to delete section",
-            error: err.message
-        });
-    }
+    // Delete the associated subsections
+    await Subsection.deleteMany({ _id: { $in: section.subSection } })
+
+    await Section.findByIdAndDelete(sectionId)
+
+    // find the updated course and return it
+    const course = await Course.findById(courseId)
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .exec()
+
+    res.status(200).json({
+      success: true,
+      message: "Section deleted",
+      data: course,
+    })
+  } catch (error) {
+    console.error("Error deleting section:", error)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    })
+  }
 }
 
 
