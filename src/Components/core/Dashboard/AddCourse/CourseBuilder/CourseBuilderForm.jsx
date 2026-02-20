@@ -22,7 +22,7 @@ export default function CourseBuilderForm() {
 
   // handle form submission
   const onSubmit = async (data) => {
-    // console.log(data)
+    console.log("data", data);
     setLoading(true);
 
     let result;
@@ -45,9 +45,10 @@ export default function CourseBuilderForm() {
         },
         token,
       );
+      console.log("result", result);
     }
     if (result) {
-      // console.log("section result", result)
+      console.log("section result", result)
       dispatch(setCourse(result));
       setEditSectionName(null);
       setValue("sectionName", "");
@@ -70,7 +71,7 @@ export default function CourseBuilderForm() {
   };
 
   const goToNext = () => {
-    if (course.courseContent.length === 0) {
+    if (course?.courseContent?.length === 0) {
       toast.error("Please add atleast one section");
       return;
     }
@@ -133,7 +134,9 @@ export default function CourseBuilderForm() {
         </div>
       </form>
 
-      {course.courseContent.length > 0 && (
+      
+      {course?.courseContent?.length > 0 && (
+        
         <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
       )}
 
