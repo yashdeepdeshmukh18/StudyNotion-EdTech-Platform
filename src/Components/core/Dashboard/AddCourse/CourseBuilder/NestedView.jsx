@@ -47,6 +47,7 @@ export default function NestedView({ handleChangeEditSectionName }) {
     setConfirmationModal(null)
   }
 
+
   return (
     <>
       <div
