@@ -39,10 +39,11 @@ exports.createSubsection = async (req, res) => {
 
         // HW :log updated secion here, after adding populate query
 
+
         return res.status(200).json({
             success: true,
             message: "Subsection created successfully",
-            updatedSection
+            data: updatedSection,
         });
     }
     catch(err){
@@ -57,8 +58,8 @@ exports.createSubsection = async (req, res) => {
 // TODO: updateSubsection controller function
  exports.updateSubsection = async (req, res) => {
     try {
-      const { sectionId, title, description } = req.body
-      const subSection = await Subsection.findById(sectionId)
+      const { sectionId, subSectionId, title, description } = req.body
+      const subSection = await Subsection.findById(subSectionId)
   
       if (!subSection) {
         return res.status(404).json({
