@@ -65,7 +65,7 @@ const CourseInformationForm = () => {
       currentValues.coursePrice !== course.price ||
       currentValues.courseTags.toString() !== course.tag.toString() ||
       currentValues.courseBenefits !== course.whatYouWillLearn ||
-      currentValues.courseCategory._id !== course.category._id ||
+      currentValues.courseCategory?._id !== course.category?._id ||
       currentValues.courseRequirements.toString() !==
         course.instructions.toString() || 
       currentValues.courseImage !== course.thumbnail
@@ -104,7 +104,7 @@ const CourseInformationForm = () => {
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits)
         }
-        if (currentValues.courseCategory._id !== course.category._id) {
+        if (currentValues.courseCategory?._id !== course.category?._id) {
           formData.append("category", data.courseCategory)
         }
         if (
@@ -151,7 +151,6 @@ const CourseInformationForm = () => {
     }
     setLoading(false)
   }
-  
 
   return (
     <form
