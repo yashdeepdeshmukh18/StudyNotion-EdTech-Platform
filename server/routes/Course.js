@@ -9,6 +9,7 @@ const {
   createCourse,
   getAllCourses,
   getCourseDetails,
+  getFullCourseDetails,
   editCourse,
   getInstructorCourses,
   deleteCourse,
@@ -72,6 +73,8 @@ router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses)
 router.get("/getAllCourses", getAllCourses)
 // Get Details for a Specific Courses
 router.post("/getCourseDetails", getCourseDetails)
+// Get Details for a Specific Courses
+router.post("/getFullCourseDetails", auth, getFullCourseDetails)
 // Delete a Course
 router.delete("/deleteCourse", deleteCourse)
 
