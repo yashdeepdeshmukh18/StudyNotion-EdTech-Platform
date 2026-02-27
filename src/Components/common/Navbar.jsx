@@ -83,12 +83,12 @@ const Navbar = () => {
                     {
                         link.title === "Catalog" ? (
                             <>
-                            <div className='relative flex items-center gap-2 group'>
+                            <div className='relative flex items-center gap-1 group'>
                                 <p>{link.title}</p>
                                 <IoIosArrowDropdownCircle/>
 
                                 <div className='z-10 invisible absolute left-[50%]
-                                    translate-x-[-50%] translate-y-[30%]
+                                    translate-x-[-50%] translate-y-[13%]
                                  top-[50%]
                                 flex flex-col rounded-md bg-richblack-5 p-4 text-richblack-900
                                 opacity-0 transition-all duration-200 group-hover:visible
@@ -100,31 +100,31 @@ const Navbar = () => {
                                 </div>
 
                                 {loading ? (
-                                                          <p className="text-center">Loading...</p>
-                                                        ) : subLinks.length ? (
-                                                          <>
-                                                            {subLinks
-                                                              ?.filter(
-                                                                (subLink) => subLink?.courses?.length > 0
-                                                              )
-                                                              ?.map((subLink, i) => (
-                                                                <Link
-                                                                  to={`/catalog/${subLink.name
-                                                                    .split(" ")
-                                                                    .join("-")
-                                                                    .toLowerCase()}`}
-                                                                  className="rounded-lg bg-transparent py-4 pl-4 hover:bg-richblack-50"
-                                                                  key={i}
-                                                                >
-                                                                  <p>{subLink.name}</p>
-                                                                </Link>
-                                                              ))}
-                                                          </>
-                                                        ) : (
-                                                          <p className="text-center">No Courses Found</p>
-                                                        )}
-                                                      </div>
-                                                    </div>
+                                    <p className="text-center">Loading...</p>
+                                  ) : subLinks.length ? (
+                                    <>
+                                      {subLinks
+                                        ?.filter(
+                                          (subLink) => subLink?.courses?.length > 0
+                                        )
+                                        ?.map((subLink, i) => (
+                                          <Link
+                                            to={`/catalog/${subLink.name
+                                              .split(" ")
+                                              .join("-")
+                                              .toLowerCase()}`}
+                                            className="rounded-lg items-center bg-transparent py-4 pl-4 hover:bg-richblack-50"
+                                            key={i}
+                                          >
+                                            <p>{subLink.name}</p>
+                                          </Link>
+                                        ))}
+                                    </>
+                                  ) : (
+                                    <p className="text-center">No Courses Found</p>
+                                  )}
+                                </div>
+                              </div>
                             </>
                         ) : (
                             <Link to={link?.path}>
