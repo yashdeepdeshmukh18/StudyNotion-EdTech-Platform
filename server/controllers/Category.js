@@ -1,5 +1,9 @@
 const Category = require("../models/Category");
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 // create a tag ka handler function
 
 exports.createCategory = async (req, res) => {
@@ -140,7 +144,7 @@ exports.categoryPageDetails = async (req, res) => {
       .exec()
 
     console.log("SELECTED COURSE", selectedCategory)
-	
+
     // Handle the case when the category is not found
     if (!selectedCategory) {
       console.log("Category not found.")
@@ -157,21 +161,26 @@ exports.categoryPageDetails = async (req, res) => {
         message: "No courses found for the selected category.",
       })
     }
-
     // Get courses for other categories
     const categoriesExceptSelected = await Category.find({
-      _id: { $ne: categoryId },
+		_id: { $ne: categoryId },
     })
-    let differentCategory = await Category.findOne(
-      categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
-        ._id
-    )
-      .populate({
-        path: "courses",
-        match: { status: "Published" },
-      })
-      .exec()
-    console.log()
+	
+    // let differentCategory = await Category.findOne(
+    //   categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]._id
+    // )
+    //   .populate({
+    //     path: "courses",
+    //     match: { status: "Published" },
+    //   })
+    //   .exec()
+
+	let differentCategory = await Category.findOne({ _id: categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]._id })
+	.populate({
+		path: "courses",
+		match: { status: "Published" },
+	})
+	.exec();
 
     // Get top-selling courses across all categories
     const allCategories = await Category.find()
