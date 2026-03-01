@@ -22,7 +22,11 @@ import {ACCOUNT_TYPE} from "./utils/constants"
 import { useSelector } from "react-redux";
 import AddCourse from "./Components/core/Dashboard/AddCourse";
 import MyCourses from "./Components/core/Dashboard/MyCourses";
-import EditCourse from "./Components/core/Dashboard/EditCourse"
+import EditCourse from "./Components/core/Dashboard/EditCourse";
+import Catalog from "./pages/Catalog"
+import VideoDetails from "./Components/core/ViewCourse/VideoDetails"
+import ViewCourse from "./pages/ViewCourse"
+import CourseDetails from "./pages/CourseDetails"
 
 
 
@@ -34,6 +38,10 @@ function App() {
     <Navbar/>
     <Routes>
       <Route path="/" element={<Home/>} />
+      <Route path="/contact" element={<Contact/>}/>
+      <Route path="catalog/:catalogName" element={<Catalog />} />
+      <Route path="courses/:courseId" element={<CourseDetails />} />
+      
       <Route
           path="signup"
           element={
@@ -87,7 +95,6 @@ function App() {
           }
         />
 
-        <Route path="/contact" element={<Contact/>}/>
 
         <Route  element={
           <PrivateRoute>
@@ -112,10 +119,28 @@ function App() {
               <Route path="dashboard/add-course" element={<AddCourse />} />
               <Route path="dashboard/my-courses" element={<MyCourses/>} />
               <Route path="dashboard/edit-course/:courseId" element={<EditCourse/>} />
+              
             </>
           )
         }
+        </Route>
 
+        {/* For the watching course lectures */}
+        <Route
+          element={
+            <PrivateRoute>
+              <ViewCourse />
+            </PrivateRoute>
+          }
+        >
+          {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+            <>
+              <Route
+                path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                element={<VideoDetails />}
+              />
+            </>
+          )}
         </Route>
 
 
