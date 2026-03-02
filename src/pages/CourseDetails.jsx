@@ -102,7 +102,6 @@ function CourseDetails() {
   } = response.data?.courseDetails
 
   const handleBuyCourse = () => {
-    console.log("Buy course")
     if (token) {
       buyCourse(token, [courseId], user, navigate, dispatch)
       return
