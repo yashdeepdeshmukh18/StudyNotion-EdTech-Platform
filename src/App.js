@@ -16,7 +16,7 @@ import PrivateRoute from "./Components/core/Auth/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
 import Error from "./pages/Error"
 import Settings from "./Components/core/Dashboard/Settings"
-import EnrolledCourses from "./Components/core/Dashboard/Settings/EnrolledCourses";
+import EnrolledCourses from "./Components/core/Dashboard/EnrolledCourses";
 import Cart from "./Components/core/Dashboard/Cart"
 import {ACCOUNT_TYPE} from "./utils/constants"
 import { useSelector } from "react-redux";
