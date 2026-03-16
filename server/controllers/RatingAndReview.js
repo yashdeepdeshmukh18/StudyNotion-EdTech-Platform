@@ -11,7 +11,7 @@ exports.createRating = async (req, res) => {
         const {rating, review, courseId} = req.body;
         // check if user is enrolled or not 
         const courseDetails = await Course.findOne({_id:courseId,
-                                                    studentsEnrolled: {$eleMatch: {$eq : userId}},
+                                                    studentsEnrolled: {$elemMatch: {$eq : userId}},
                                                     });
                                                     
         if(!courseDetails){
@@ -53,7 +53,7 @@ exports.createRating = async (req, res) => {
         console.log(updatedCourseDetails);
 
         // return response
-        return res.status(300).json({
+        return res.status(200).json({
             success:true,
             message:'Rating and review created succesfully',
             ratingReview
