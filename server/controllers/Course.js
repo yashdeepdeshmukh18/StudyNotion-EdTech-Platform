@@ -593,6 +593,8 @@ exports.getCourseDetails = async (req, res) => {
     })
   }
 }
+
+
 exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body
@@ -617,7 +619,7 @@ exports.getFullCourseDetails = async (req, res) => {
       .exec()
 
     let courseProgressCount = await CourseProgress.findOne({
-      courseID: courseId,
+      courseId: courseId,
       userId: userId,
     })
 
