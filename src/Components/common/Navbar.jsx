@@ -11,16 +11,6 @@ import { categories } from '../../services/apis'
 import { useState } from 'react'
 import {IoIosArrowDropdownCircle} from "react-icons/io"
 
-// const subLinks = [
-//     {
-//         title: "python",
-//         link:"/catalog/python"
-//     },
-//     {
-//         title: "web dev",
-//         link:"/catalog/web-development"
-//     },
-// ];
 
 
 const Navbar = () => {
@@ -149,10 +139,10 @@ const Navbar = () => {
             {
                 user && user?.accountType != "Instructor" && (
                     <Link to="/dashboard/cart" className='relative'>
-                        <AiOutlineShoppingCart />
+                        <AiOutlineShoppingCart className='text-richblack-25 text-2xl' />
                         {
                             totalItems > 0 && (
-                                <span>
+                                <span className='absolute -bottom-2 -right-2 bg-richblack-900 text-white rounded-full w-5 h-5 flex items-center justify-center'>
                                     {totalItems}
                                 </span>
                             )
