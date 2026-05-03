@@ -25,6 +25,7 @@ app.use(cookieParser());
 app.use(
     cors({
         origin: [
+            "http://localhost:3000",
             "https://learnify-edtech-platform-one.vercel.app",
             "https://learnify-edtech-platform-4t69evs4o-yashdeeps-projects-557df396.vercel.app"
         ],

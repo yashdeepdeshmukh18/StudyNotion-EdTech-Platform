@@ -3,6 +3,7 @@ import { AiOutlineCaretDown } from "react-icons/ai"
 import { VscDashboard, VscSignOut } from "react-icons/vsc"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
+import {ACCOUNT_TYPE} from "../../../utils/constants"
 
 import useOnClickOutside from "../../../hooks/useOnClickOutside"
 import { logout } from "../../../services/operations/authAPI"
@@ -34,7 +35,8 @@ export default function ProfileDropdown() {
           className="absolute top-[118%] right-0 z-[1000] divide-y-[1px] divide-richblack-700 overflow-hidden rounded-md border-[1px] border-richblack-700 bg-richblack-800"
           ref={ref}
         >
-          <Link to="/dashboard/instructor" onClick={() => setOpen(false)}>
+        
+          <Link to= {user?.accountType === ACCOUNT_TYPE.STUDENT ? ("/dashboard/my-profile") : ("/dashboard/instructor")} onClick={() => setOpen(false)}>
             <div className="flex w-full items-center gap-x-1 py-[10px] px-[12px] text-sm text-richblack-100 hover:bg-richblack-700 hover:text-richblack-25">
               <VscDashboard className="text-lg" />
               Dashboard
