@@ -1,6 +1,6 @@
 # StudyNotion - EdTech Platform
 
-🚀 **Live Demo:** https://learnify-edtech-platform-44279ttfr-yashdeeps-projects-557df396.vercel.app/
+🚀 **Live Demo:** https://learnify-edtech-platform-one.vercel.app/
 
 <img width="518" height="782" alt="mainpage" src="https://github.com/user-attachments/assets/5dd2f279-0895-4d68-b6d6-7cfdd2334adc" />
 
