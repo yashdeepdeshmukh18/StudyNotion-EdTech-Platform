@@ -23,7 +23,7 @@ const OTPSchema = new mongoose.Schema({
 // function -> to send emails
 async function sendVerificationEmail(email, otp){
     try{
-        const mailResponse = await mailSender(email, "Verification Emails from Learnify", emailVerificationTemplate(otp));
+        const mailResponse = await mailSender(email, "Verification Emails from StudyNotion", emailVerificationTemplate(otp));
         console.log("Mail sent successfully:", mailResponse);
     }
     catch(error){
