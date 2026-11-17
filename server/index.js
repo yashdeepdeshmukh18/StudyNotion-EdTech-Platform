@@ -11,6 +11,7 @@ const courseRoutes = require("./routes/Course");
 const contactUsRoute = require("./routes/Contact");
 
 const database = require("./config/database");
+const { connectRedis } = require("./config/redis");
 const cookieParser = require("cookie-parser"); 
 const cors = require("cors");
 const {cloudinaryConnect} = require("./config/cloudinary");
@@ -20,6 +21,10 @@ const PORT = process.env.PORT || 4000;
 
 // database connect
 database.connect();
+
+// Redis connect
+connectRedis();
+
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
