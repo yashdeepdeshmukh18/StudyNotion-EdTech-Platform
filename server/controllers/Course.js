@@ -176,6 +176,11 @@ exports.editCourse = async (req, res) => {
 
     await course.save()
 
+    // Invalidate course cache
+    await redisClient.del("all_courses");
+
+    console.log("Course cache invalidated after updating a course");
+
     const updatedCourse = await Course.findOne({
       _id: courseId,
     })
@@ -550,6 +555,11 @@ exports.deleteCourse = async (req, res) => {
 
     // Delete the course
     await Course.findByIdAndDelete(courseId)
+
+    // Invalidate course cache
+    await redisClient.del("all_courses");
+
+    console.log("Course cache invalidated after deleting a course");
 
     return res.status(200).json({
       success: true,
